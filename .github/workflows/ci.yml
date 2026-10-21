@@ -100,3 +100,24 @@ jobs:
         run: npm ci
       - name: Test suite
         run: npm run test:focused
+
+  # For the Linux beta (#35): merge with that decision, not before. The
+  # AppImage target exists and the code already branches on Linux
+  # (osSandbox.ts, open at login); this keeps Linux from breaking unseen once
+  # it ships. It blocks the run like the others, but is not one of the four
+  # required checks until the owner adds it to the ruleset.
+  test-linux:
+    name: Tests (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      # Install scripts must run: they finish the Electron runtime and node-pty.
+      - name: Install dependencies
+        run: npm ci
+      - name: Test suite
+        run: npm run test:focused
